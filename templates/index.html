@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+        <title>Depression  Prediction</title>
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            body{
+                background-color: #e1f5fe;
+                min-height: 100vh;
+            }
+            .sec-1 {
+                padding: 20px 100px 10px 100px;
+            }
+            input {
+                border-radius: 0 !important;
+            }
+
+            form {
+                max-width: 700px;
+                margin: 1em auto;
+                background:#fff ;
+                padding: 1em;
+            }
+            button{
+                border-radius: 0 !important;
+            }
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            }
+
+            /* Firefox */
+            input[type=number] {
+            -moz-appearance: textfield;
+            }
+
+            #predict-btn{
+                background-color: #4150b4 !important;
+            }
+            #predict-btn:hover{
+                opacity: 0.8;
+            }
+            .header{
+                padding: 1em;
+                background-color: #6495ED !important;
+            }
+            @media (max-width:992px) {
+                .sec-1{
+                    padding: 20px;
+                }
+                form{
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid header">
+
+        </div>
+        <div class="container-fluid sec-1">
+            <div class="container">
+                <div class="row">
+                    <h2 class="text-center">Depression Predictor</h2>
+                    <div class="col-md-12">
+                        <form  onsubmit="handleSubmit(event)">
+                            <div class="d-md-flex gap-3">
+
+                                <div class="mb-3  w-100">
+                                    <label class="form-label">Marrital Status:</label>
+                                    <select class="form-control" id="var1" name="married" required>
+									  <option value="1">Married</option>
+									  <option value="0">Single</option>
+									</select>
+                                </div>
+
+                                <div class="mb-3 w-100">
+                                    <label class="form-label">Number of Children:</label>
+                                    <input min="0" required type="number" class="form-control" id="var2">
+                                </div>
+
+                            </div>
+
+                            <div class="d-md-flex gap-3">
+                                <div class="mb-3 w-100">
+                                    <label class="form-label">Financial Value (USD):</label>
+                                    <input min="0" required type="number" class="form-control" id="var3">
+                                </div>
+
+                                <div class="mb-3 w-100">
+                                    <label class="form-label">Value of Durable Assets (USD):</label>
+                                    <input min="0" required type="number" class="form-control" id="var4">
+                                </div>
+                            </div>
+
+
+                            <div class="d-md-flex gap-3 ">
+                                <div class="mb-3 w-100">
+                                    <label class="form-label">Alcohol Usage Per Week (USD):</label>
+                                    <input  min="0"required type="number" class="form-control" id="var5">
+                                </div>
+
+                                <div class="mb-3 w-100">
+                                    <label class="form-label">Long Lasting Investments (USD):</label>
+                                    <input min="0" required type="number" class="form-control" id="var6">
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label class="form-label">Monthly Payments (USD):</label>
+                                <input required type="number" class="form-control" id="var7">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Do you have a Job?</label>
+								<select class="form-control" id="var8" required>
+								  <option value="1">Yes</option>
+								  <option value="0">No</option>
+								</select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Monthly Earnings (USD):</label>
+                                <input required type="number" class="form-control" id="var9">
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary w-100" id="predict-btn">Predict</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container-fluid">
+            <h3 id="prediction-result" class="result text-center"></h3>
+        </div>
+        <script>
+            function handleSubmit(e) {
+                e.preventDefault();
+                console.log('submit');
+                var var1 = document.getElementById('var1').value;
+                var var2 = document.getElementById('var2').value;
+                var var3 = document.getElementById('var3').value;
+                var var4 = document.getElementById('var4').value;
+                var var5 = document.getElementById('var5').value;
+                var var6 = document.getElementById('var6').value;
+                var var7 = document.getElementById('var7').value;
+                var var8 = document.getElementById('var8').value;
+                var var9 = document.getElementById('var9').value;
+
+                console.log(var1,var2,var3,var4,var5,var6,var7);
+
+                // sending fetch request
+                fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        var1,
+                        var2,
+                        var3,
+                        var4,
+                        var5,
+                        var6,
+                        var7,
+                        var8,
+                        var9
+                    })
+                }).then((res)=>res.json()).then((data)=>{
+                    let marks=(data.prediction);
+                    document.querySelector('.result').textContent=`You are ${marks}`
+                }).catch(e=>console.log(e))
+
+            }
+        </script>
+    </body>
+</html>
